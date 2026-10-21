@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Documents2theWorld</title>
+<meta name="description" content="Send original documents to any country. Collected, scanned, tracked and signed for on arrival.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Instrument+Sans:wght@400;500;600;700&family=Courier+Prime:wght@400;700&display=swap">
+<style>
+/* Layout: a night-flight hero (dotted world map, a live route drawn between the two countries the visitor picks) above airmail-paper sections. The route sentence is the hero; everything else stays quiet. */
+:root{
+  --paper:#F1F4F9; --sheet:#FFFFFF; --ink:#14204A; --muted:#55607E; --line:#D2D9E6;
+  --red:#C8202F; --blue:#1F4FB6; --stamp:#2C6A4E;
+  --night:#0C1838; --night-2:#132350; --star:#E8EEFF; --land:rgba(160,184,255,.30); --glow:#FF5A66; --sky:#7FA2FF;
+  --display:"Big Shoulders Display","Arial Narrow","Roboto Condensed",Impact,sans-serif;
+  --body:"Instrument Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --type:"Courier Prime","Courier New",Courier,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0F1733;--sheet:#17204A;--ink:#E9EDF8;--muted:#A5AFCC;--line:#2B3664;
+  --red:#F2535F;--blue:#7C9DFF;--stamp:#62C496;
+  --night:#08112B;--night-2:#0F1C45;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0F1733;--sheet:#17204A;--ink:#E9EDF8;--muted:#A5AFCC;--line:#2B3664;
+  --red:#F2535F;--blue:#7C9DFF;--stamp:#62C496;
+  --night:#08112B;--night-2:#0F1C45;color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 1.0625rem/1.6 var(--body);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--sky);outline-offset:3px;border-radius:2px}
+.wrap{max-width:1200px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.airmail{height:10px;background:repeating-linear-gradient(-45deg,var(--red) 0 14px,#fff 14px 22px,var(--blue) 22px 36px,#fff 36px 44px)}
+
+/* ---------- night hero ---------- */
+.night{position:relative;background:radial-gradient(120% 90% at 70% 40%,var(--night-2),var(--night) 70%);color:var(--star);overflow:hidden;isolation:isolate}
+.night header .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:22px;position:relative;z-index:2}
+.logo{display:flex;align-items:baseline;text-decoration:none;font-family:var(--display);font-weight:900;font-size:1.7rem;letter-spacing:.01em;line-height:1;color:var(--star)}
+.logo b{color:var(--glow)}
+nav{display:flex;gap:24px;flex-wrap:wrap}
+nav a{text-decoration:none;font-weight:500;font-size:.95rem;color:rgba(232,238,255,.72)}
+nav a:hover{color:#fff}
+@media (max-width:680px){nav .opt{display:none}}
+@media (max-width:440px){nav a[href="#how"]{display:none}}
+
+.hero{position:relative;z-index:1}
+.herogrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:24px;align-items:center;padding-block:12px 56px}
+.hcopy{display:grid;gap:28px;min-width:0}
+.globe{position:relative;min-width:0}
+#map{display:block;width:100%;aspect-ratio:1/1;max-width:100%;cursor:grab;touch-action:pan-y}
+#map:active{cursor:grabbing}
+.hint{position:absolute;left:0;right:0;bottom:4%;text-align:center;margin:0;font-family:var(--type);font-size:.8rem;color:rgba(232,238,255,.55)}
+@media (max-width:900px){.herogrid{grid-template-columns:1fr;padding-bottom:40px}.globe{max-width:560px;margin:0 auto;width:100%}}
+h1{font-family:var(--display);font-weight:900;text-transform:uppercase;line-height:.86;margin:0;font-size:clamp(3rem,5.6vw,5rem);letter-spacing:-.005em;max-width:12ch;text-wrap:balance;text-shadow:0 2px 30px rgba(8,17,43,.6)}
+.lede{max-width:40ch;margin:0;font-size:1.15rem;color:rgba(232,238,255,.82)}
+
+/* the shipping label: the hero's one object */
+:root{--lp:#FCFCF8;--lk:#14204A;--lm:#5B6684}
+.label{background:var(--lp);color:var(--lk);padding:16px;position:relative;transform:rotate(-1.4deg);box-shadow:0 30px 60px -20px rgba(0,0,0,.55);max-width:540px;
+  background-image:repeating-linear-gradient(-45deg,var(--red) 0 12px,var(--lp) 12px 19px,var(--blue) 19px 31px,var(--lp) 31px 38px);}
+.label::before{content:"";position:absolute;inset:10px;background:var(--lp)}
+.label > *{position:relative}
+.label-top{display:flex;justify-content:space-between;gap:10px;padding:10px 14px 0;font:700 .78rem/1 var(--type);color:var(--blue);text-transform:uppercase;letter-spacing:.04em}
+.label-top #l-no{color:var(--lm)}
+.codes{display:grid;grid-template-columns:minmax(0,1fr) 92px minmax(0,1fr);align-items:end;gap:6px;padding:10px 14px 14px;border-bottom:2px dashed #CCD3E2}
+.end{display:grid;min-width:0}
+.end.to{text-align:right}
+.cap{font:600 .72rem/1 var(--body);color:var(--lm);text-transform:uppercase;letter-spacing:.08em}
+.end b{font-family:var(--display);font-weight:900;font-size:clamp(3.6rem,7vw,5.4rem);line-height:.9;letter-spacing:.01em;color:var(--lk)}
+.end.to b{color:var(--red)}
+.flight{position:relative;height:56px;color:var(--blue);align-self:center}
+.flight svg{position:absolute;left:0;top:14px;width:100%;height:24px}
+.flight .plane{width:26px;height:26px;left:calc(50% - 13px);top:-2px;transform:rotate(90deg);color:var(--red)}
+.pick{position:relative;display:block;min-width:0}
+.pick select{appearance:none;-webkit-appearance:none;width:100%;font:600 .95rem var(--body);color:var(--lk);background:transparent;border:0;border-bottom:2px solid var(--lk);padding:6px 22px 6px 0;cursor:pointer;text-overflow:ellipsis}
+.end.to .pick select{text-align:right;text-align-last:right;padding:6px 22px 6px 0}
+.pick::after{content:"";position:absolute;right:4px;top:50%;width:7px;height:7px;border-right:2px solid var(--red);border-bottom:2px solid var(--red);transform:translateY(-70%) rotate(45deg);pointer-events:none}
+.pick select:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.pick select option{color:#14204A;background:#fff}
+.label-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px 14px;align-items:center;padding:14px 14px 4px}
+.label-row .dsel{max-width:240px}
+.dist{font:700 .85rem var(--type);color:var(--lm);text-align:right}
+.label-foot{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 14px 12px}
+.label .barcode{height:44px;flex:1 1 auto;max-width:220px;background:repeating-linear-gradient(90deg,var(--lk) 0 2px,transparent 2px 4px,var(--lk) 4px 5px,transparent 5px 8px,var(--lk) 8px 11px,transparent 11px 12px,var(--lk) 12px 13px,transparent 13px 17px)}
+@media (max-width:520px){.codes{grid-template-columns:minmax(0,1fr) 54px minmax(0,1fr)}.label-row{grid-template-columns:1fr}.dist{text-align:left}.label .barcode{display:none}.label-foot .btn{flex:1;justify-content:center}}
+.small{font-size:.9rem;color:rgba(232,238,255,.65);margin:0;max-width:52ch}
+.btn{display:inline-flex;align-items:center;gap:10px;font:600 1rem/1 var(--body);padding:17px 24px;border-radius:4px;text-decoration:none;border:2px solid transparent;cursor:pointer}
+.btn.hot{background:var(--glow);color:#fff;border-color:var(--glow)}
+.btn.hot:hover{background:#fff;color:var(--night);border-color:#fff}
+.btn.line{border-color:rgba(232,238,255,.45);color:#fff;background:transparent}
+.btn.line:hover{border-color:#fff}
+
+/* ---------- light sections ---------- */
+section.block .wrap{padding-block:88px}
+@media (max-width:640px){section.block .wrap{padding-block:60px}}
+h2{font-family:var(--display);font-weight:900;font-size:clamp(2.3rem,5.4vw,3.8rem);line-height:.92;margin:0;text-transform:uppercase;text-wrap:balance}
+.intro{max-width:56ch;color:var(--muted);margin:16px 0 0}
+.seam{height:6px;background:repeating-linear-gradient(-45deg,var(--red) 0 10px,transparent 10px 15px,var(--blue) 15px 25px,transparent 25px 30px)}
+
+/* tracking slip = how it works */
+.slip{margin-top:44px;background:var(--sheet);border:1px solid var(--line);box-shadow:0 24px 50px -36px rgba(20,32,74,.5);position:relative}
+.slip-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;padding:18px 24px;border-bottom:2px dashed var(--line);font-family:var(--type);font-size:.92rem;color:var(--muted)}
+.slip-head b{color:var(--ink)}
+.track{list-style:none;margin:0;padding:28px 24px 30px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;position:relative}
+.track::before{content:"";position:absolute;left:36px;right:36px;top:46px;height:3px;background:repeating-linear-gradient(90deg,var(--red) 0 12px,transparent 12px 18px,var(--blue) 18px 30px,transparent 30px 36px)}
+.track li{position:relative;min-width:0}
+.dot{width:38px;height:38px;border-radius:50%;background:var(--sheet);border:3px solid var(--ink);display:grid;place-items:center;font-family:var(--display);font-weight:900;font-size:1.25rem;position:relative;z-index:1}
+.track li:last-child .dot{background:var(--stamp);border-color:var(--stamp);color:#fff}
+.track h3{font:700 1.12rem/1.3 var(--body);margin:16px 0 6px}
+.track p{margin:0;color:var(--muted);font-size:.97rem}
+.track .ts{font-family:var(--type);font-size:.82rem;color:var(--blue);margin-top:10px}
+@media (max-width:860px){.track{grid-template-columns:1fr 1fr}.track::before{display:none}}
+@media (max-width:520px){.track{grid-template-columns:1fr}}
+
+/* documents */
+.docs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px;margin-top:40px;background:var(--line);border:2px solid var(--line)}
+@media (max-width:860px){.docs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:500px){.docs{grid-template-columns:1fr}}
+.doc{background:var(--sheet);padding:26px;min-width:0}
+.doc h3{font:700 1.1rem/1.3 var(--body);margin:0 0 6px}
+.doc p{margin:0;color:var(--muted);font-size:.96rem}
+.doc .ex{font-family:var(--type);font-size:.86rem;color:var(--blue);margin-top:12px}
+
+/* promises */
+.promises{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;align-items:start}
+@media (max-width:860px){.promises{grid-template-columns:1fr;gap:28px}}
+.plist{display:grid;gap:24px}
+.plist > div{display:grid;grid-template-columns:30px minmax(0,1fr);gap:16px}
+.plist svg{width:30px;height:30px}
+.plist h3{font:700 1.1rem/1.3 var(--body);margin:0 0 2px}
+.plist p{margin:0;color:var(--muted);font-size:.97rem}
+.stampbig{margin-top:30px;display:inline-grid;place-items:center;width:150px;aspect-ratio:1;border:4px double var(--red);border-radius:50%;color:var(--red);font-family:var(--display);font-weight:900;text-align:center;line-height:1;transform:rotate(-12deg);font-size:1rem}
+.stampbig b{font-size:2.2rem;display:block}
+
+/* faq */
+.faqsec{background:var(--sheet)}
+.faq{margin-top:32px;border-top:2px solid var(--ink);max-width:840px}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{cursor:pointer;list-style:none;padding:20px 44px 20px 0;font-weight:600;font-size:1.08rem;position:relative}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";position:absolute;right:6px;top:10px;font-family:var(--display);font-size:2.1rem;color:var(--red);transition:transform .2s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq p{margin:0 0 20px;color:var(--muted);max-width:65ch}
+
+/* contact */
+.contact{background:var(--night);color:var(--star)}
+.contact .wrap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:40px;align-items:center;padding-block:76px}
+@media (max-width:860px){.contact .wrap{grid-template-columns:1fr}}
+.contact h2{color:#fff}
+.contact .intro{color:rgba(232,238,255,.75)}
+.mailline{font-family:var(--type);font-size:clamp(1rem,2.5vw,1.45rem);overflow-wrap:anywhere;border:2px dashed rgba(232,238,255,.35);padding:18px 20px;display:flex;justify-content:space-between;align-items:center;gap:14px;color:#fff}
+.copy{font:600 .9rem var(--body);background:var(--glow);color:#fff;border:0;border-radius:4px;padding:10px 14px;cursor:pointer;flex:none}
+footer{background:var(--night);color:rgba(232,238,255,.6)}
+footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-block:24px;font-size:.9rem;border-top:1px solid rgba(232,238,255,.12)}
+
+/* postmark ribbon */
+.marquee{overflow:hidden;background:var(--paper);border-bottom:1px solid var(--line);padding-block:22px}
+.mtrack{display:flex;gap:34px;width:max-content;animation:slide 48s linear infinite}
+.pm{flex:none;width:104px;aspect-ratio:1;border:3px double var(--red);border-radius:50%;display:grid;place-items:center;align-content:center;gap:2px;color:var(--red);transform:rotate(-12deg);opacity:.85}
+.pm:nth-child(3n+2){color:var(--blue);border-color:var(--blue);transform:rotate(9deg)}
+.pm:nth-child(3n){color:var(--stamp);border-color:var(--stamp);transform:rotate(-4deg)}
+.pm i{font:700 .62rem/1 var(--type);font-style:normal;letter-spacing:.06em}
+.pm b{font:900 1.9rem/1 var(--display)}
+@keyframes slide{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.mtrack{animation:none}}
+
+/* documents as paper sheets */
+.docs{background:none;border:0;gap:26px}
+.doc{background:var(--sheet);border:1px solid var(--line);box-shadow:0 18px 30px -24px rgba(20,32,74,.55);position:relative;transition:transform .25s ease, box-shadow .25s ease;padding:30px 26px 26px}
+.doc:nth-child(odd){transform:rotate(-.8deg)}
+.doc:nth-child(even){transform:rotate(.7deg)}
+.doc:hover{transform:rotate(0) translateY(-4px);box-shadow:0 26px 40px -24px rgba(20,32,74,.6)}
+.doc::after{content:"";position:absolute;top:-1px;right:-1px;width:26px;height:26px;background:linear-gradient(225deg,var(--paper) 50%,var(--line) 50%)}
+.doc .st{position:absolute;top:16px;right:38px;width:36px;height:44px;display:grid;place-items:center;font:900 1rem/1 var(--display);color:#fff;background:var(--stamp);outline:2px dashed var(--sheet);outline-offset:-5px;transform:rotate(6deg)}
+.doc:nth-child(3n+2) .st{background:var(--red)} .doc:nth-child(3n) .st{background:var(--blue)}
+.doc h3{padding-right:70px}
+@media (prefers-reduced-motion:reduce){.doc{transition:none}}
+
+/* contact envelope */
+.envwrap{display:grid;place-items:center}
+.env{position:relative;width:min(100%,460px);aspect-ratio:1.55;background:#E9EEF8;box-shadow:0 30px 60px -25px rgba(0,0,0,.6);margin-top:90px}
+.env::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(-45deg,var(--red) 0 12px,#E9EEF8 12px 19px,#2B5BC9 19px 31px,#E9EEF8 31px 38px);clip-path:polygon(0 0,100% 0,100% 100%,0 100%,0 0,8px 8px,8px calc(100% - 8px),calc(100% - 8px) calc(100% - 8px),calc(100% - 8px) 8px,8px 8px)}
+.letter{position:absolute;left:7%;right:7%;bottom:26%;height:66%;background:#FFFFFF;color:#14204A;padding:22px;display:grid;align-content:start;gap:12px;transform:translateY(-34%);transition:transform .45s cubic-bezier(.2,.9,.3,1.2);box-shadow:0 6px 18px -8px rgba(0,0,0,.35)}
+.env:hover .letter,.env:focus-within .letter{transform:translateY(-46%)}
+.letter .to{font:700 .78rem var(--type);color:#5B6684;letter-spacing:.04em}
+.letter #mail{font:700 clamp(.95rem,2.6vw,1.25rem) var(--type);overflow-wrap:anywhere}
+.letter .copy{justify-self:start}
+.front{position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(to top right,#DCE3F2 50%,transparent 50.4%) left bottom/50% 100% no-repeat,linear-gradient(to top left,#DCE3F2 50%,transparent 50.4%) right bottom/50% 100% no-repeat;}
+.front::after{content:"";position:absolute;left:0;right:0;bottom:0;height:46%;background:#E4EAF6}
+.letter{z-index:1}
+@media (prefers-reduced-motion:reduce){.letter{transition:none}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 fill=%27%230C1838%27/%3E%3Ctext x=%2716%27 y=%2724%27 font-family=%27Arial Black,Arial%27 font-size=%2222%27 font-weight=%27900%27 fill=%27%23FF5A66%27 text-anchor=%27middle%27%3E2%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+
+
+<div class="night">
+  <header>
+    <div class="wrap">
+      <a class="logo" href="#top" aria-label="Documents2theWorld home">Documents<b>2</b>theWorld</a>
+      <nav aria-label="Main">
+        <a href="#how">How it works</a>
+        <a class="opt" href="#documents">What we send</a>
+        <a class="opt" href="#faq">Questions</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" id="top">
+    <div class="wrap herogrid">
+      <div class="hcopy">
+      <h1>Original documents, any country</h1>
+      <p class="lede">We collect your papers, scan a copy for you, fly them across the world and get a signature when they land.</p>
+
+      <form class="label" id="routeform" novalidate aria-label="Get a price for your route">
+        <div class="label-top"><span>Par avion · By airmail</span><span id="l-no">D2W-00000</span></div>
+        <div class="codes">
+          <div class="end"><span class="cap">From</span><b id="c-from">LON</b><span class="pick"><select id="r-from" aria-label="Sending from"></select></span></div>
+          <div class="flight" aria-hidden="true">
+            <svg viewBox="0 0 120 24" preserveAspectRatio="none"><path d="M2 20 Q60 -6 118 20" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 5"/></svg>
+            <svg class="plane" viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" fill="currentColor"/></svg>
+          </div>
+          <div class="end to"><span class="cap">To</span><b id="c-to">SAO</b><span class="pick"><select id="r-to" aria-label="Sending to"></select></span></div>
+        </div>
+        <div class="label-row">
+          <label class="cap" for="r-doc">Document</label>
+          <span class="pick dsel"><select id="r-doc"><option>certificate</option><option>contract</option><option>diploma</option><option>visa file</option><option>passport</option><option>power of attorney</option></select></span>
+          <span class="dist" id="m-dist">10,260 km door to door</span>
+          <span id="m-route" hidden></span>
+        </div>
+        <div class="label-foot">
+          <span class="barcode" aria-hidden="true"></span>
+          <a class="btn hot" id="getprice" href="mailto:info@documents2theworld.com">Get my price</a>
+        </div>
+      </form>
+      <p class="small">A fixed price and delivery date by email, within one working day. Tracked, signed for and insured.</p>
+      </div>
+      <div class="globe"><canvas id="map" role="img" aria-label="A globe showing the delivery route between the two countries you picked"></canvas><p class="hint">Drag to spin the globe</p></div>
+    </div>
+  </section>
+  <div class="airmail" aria-hidden="true"></div>
+</div>
+<div class="marquee" aria-hidden="true"><div class="mtrack"><span class="pm"><i>LONDON</i><b>LON</b><i>18 OCT</i></span><span class="pm"><i>LISBOA</i><b>LIS</b><i>19 OCT</i></span><span class="pm"><i>SÃO PAULO</i><b>SAO</b><i>20 OCT</i></span><span class="pm"><i>NEW YORK</i><b>NYC</b><i>21 OCT</i></span><span class="pm"><i>LUANDA</i><b>LAD</b><i>22 OCT</i></span><span class="pm"><i>DUBAI</i><b>DXB</b><i>23 OCT</i></span><span class="pm"><i>DELHI</i><b>DEL</b><i>24 OCT</i></span><span class="pm"><i>TOKYO</i><b>TYO</b><i>25 OCT</i></span><span class="pm"><i>SYDNEY</i><b>SYD</b><i>26 OCT</i></span><span class="pm"><i>PARIS</i><b>PAR</b><i>27 OCT</i></span><span class="pm"><i>MADRID</i><b>MAD</b><i>28 OCT</i></span><span class="pm"><i>TORONTO</i><b>YTO</b><i>29 OCT</i></span><span class="pm"><i>LONDON</i><b>LON</b><i>18 OCT</i></span><span class="pm"><i>LISBOA</i><b>LIS</b><i>19 OCT</i></span><span class="pm"><i>SÃO PAULO</i><b>SAO</b><i>20 OCT</i></span><span class="pm"><i>NEW YORK</i><b>NYC</b><i>21 OCT</i></span><span class="pm"><i>LUANDA</i><b>LAD</b><i>22 OCT</i></span><span class="pm"><i>DUBAI</i><b>DXB</b><i>23 OCT</i></span><span class="pm"><i>DELHI</i><b>DEL</b><i>24 OCT</i></span><span class="pm"><i>TOKYO</i><b>TYO</b><i>25 OCT</i></span><span class="pm"><i>SYDNEY</i><b>SYD</b><i>26 OCT</i></span><span class="pm"><i>PARIS</i><b>PAR</b><i>27 OCT</i></span><span class="pm"><i>MADRID</i><b>MAD</b><i>28 OCT</i></span><span class="pm"><i>TORONTO</i><b>YTO</b><i>29 OCT</i></span></div></div>
+
+<main>
+  <section class="block" id="how" aria-labelledby="how-h">
+    <div class="wrap">
+      <h2 id="how-h">From your desk to theirs</h2>
+      <p class="intro">Every shipment follows the same four steps, and you can watch each one happen on your tracking page.</p>
+      <div class="slip">
+        <div class="slip-head"><span>Shipment <b>D2W-48213-PT</b></span><span>London → Lisbon</span><span>Certificate of birth, 1 page</span></div>
+        <ol class="track">
+          <li><div class="dot">1</div><h3>Collected</h3><p>A courier picks it up from your door, or you post it to us with a prepaid label.</p><div class="ts">Mon 09:40 · London</div></li>
+          <li><div class="dot">2</div><h3>Scanned and sealed</h3><p>We scan a copy for your records and seal the original in a rigid, waterproof envelope.</p><div class="ts">Mon 15:12 · London</div></li>
+          <li><div class="dot">3</div><h3>In flight</h3><p>It travels on the fastest safe service for the route, tracked the whole way.</p><div class="ts">Tue 06:55 · LHR → LIS</div></li>
+          <li><div class="dot">✓</div><h3>Signed for</h3><p>The recipient signs, and you get the confirmation with their name and the time.</p><div class="ts">Wed 11:03 · Lisbon</div></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <div class="seam" aria-hidden="true"></div>
+
+  <section class="block" id="documents" aria-labelledby="docs-h">
+    <div class="wrap">
+      <h2 id="docs-h">What people send with us</h2>
+      <p class="intro">Original paper that can’t be emailed, can’t be bent and can’t go missing.</p>
+      <div class="docs">
+        <div class="doc"><span class="st" aria-hidden="true">BC</span><h3>Certificates</h3><p>Birth, marriage and death certificates for family and citizenship matters abroad.</p><div class="ex">UK → Portugal, citizenship file</div></div>
+        <div class="doc"><span class="st" aria-hidden="true">CT</span><h3>Contracts</h3><p>Signed originals for property, business and court use.</p><div class="ex">Lisbon → São Paulo, wet-ink signed</div></div>
+        <div class="doc"><span class="st" aria-hidden="true">DP</span><h3>Diplomas and transcripts</h3><p>Academic records for universities and employers overseas.</p><div class="ex">Delhi → London, master’s application</div></div>
+        <div class="doc"><span class="st" aria-hidden="true">VS</span><h3>Visa and immigration files</h3><p>Complete application packs addressed exactly as the embassy asks.</p><div class="ex">Madrid → a US consulate</div></div>
+        <div class="doc"><span class="st" aria-hidden="true">ID</span><h3>Passports and IDs</h3><p>Returned safely after renewals or official checks.</p><div class="ex">Embassy → applicant’s home</div></div>
+        <div class="doc"><span class="st" aria-hidden="true">PA</span><h3>Powers of attorney</h3><p>And any other paper an office abroad insists on seeing in original.</p><div class="ex">Berlin → Luanda</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="seam" aria-hidden="true"></div>
+
+  <section class="block" aria-labelledby="prom-h">
+    <div class="wrap promises">
+      <div>
+        <h2 id="prom-h">Handled like it’s irreplaceable</h2>
+        <p class="intro">Because usually it is. Replacing an apostilled certificate can take months, so every envelope gets the same care.</p>
+        <div class="stampbig" aria-hidden="true"><div>SIGNED<b>✓</b>FOR</div></div>
+      </div>
+      <div class="plist">
+        <div><svg viewBox="0 0 30 30" fill="none" aria-hidden="true"><circle cx="15" cy="15" r="12.5" stroke="var(--blue)" stroke-width="2.5"/><path d="M9 15.5l4 4 8-9" stroke="var(--blue)" stroke-width="2.5"/></svg><div><h3>Tracked door to door</h3><p>One tracking number from pickup to signature, whichever carrier flies it.</p></div></div>
+        <div><svg viewBox="0 0 30 30" fill="none" aria-hidden="true"><rect x="3.5" y="7.5" width="23" height="16" stroke="var(--red)" stroke-width="2.5"/><path d="M3.5 8.5l11.5 8.5 11.5-8.5" stroke="var(--red)" stroke-width="2.5"/></svg><div><h3>Scanned before it leaves</h3><p>You keep a full digital copy, so nothing is ever lost completely.</p></div></div>
+        <div><svg viewBox="0 0 30 30" fill="none" aria-hidden="true"><path d="M15 3l11 4.5v7.5c0 6.5-5 10.8-11 12-6-1.2-11-5.5-11-12V7.5L15 3z" stroke="var(--stamp)" stroke-width="2.5"/></svg><div><h3>Insured in transit</h3><p>Cover for the cost of replacing the document if anything happens on the way.</p></div></div>
+        <div><svg viewBox="0 0 30 30" fill="none" aria-hidden="true"><circle cx="15" cy="15" r="12.5" stroke="var(--ink)" stroke-width="2.5"/><path d="M15 8v7.5l5 3" stroke="var(--ink)" stroke-width="2.5"/></svg><div><h3>A person who answers</h3><p>Write to us and a real person replies, usually the same day.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block faqsec" id="faq" aria-labelledby="faq-h">
+    <div class="wrap">
+      <h2 id="faq-h">Questions</h2>
+      <div class="faq">
+        <details><summary>Which countries do you deliver to?</summary><p>Almost every country in the world. If a destination has restrictions, we tell you before you pay.</p></details>
+        <details><summary>How long does it take?</summary><p>It depends on the route. Within Europe it is usually a few working days, and long-haul routes take longer. Your quote shows the expected delivery date.</p></details>
+        <details><summary>Can you send to an embassy or consulate?</summary><p>Yes. We address it exactly as the embassy asks and include any return envelope you need.</p></details>
+        <details><summary>Do you help with apostilles or translations?</summary><p>Tell us what the receiving office needs and we’ll say whether we can arrange it as part of the delivery.</p></details>
+        <details><summary>What if my document is lost?</summary><p>Every shipment is tracked and insured. You also keep the scan we make before it leaves, which you can use while a replacement is arranged.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact" aria-labelledby="contact-h">
+    <div class="wrap">
+      <div>
+        <h2 id="contact-h">Write to us</h2>
+        <p class="intro">Tell us the route and the document and we’ll reply with a fixed price and a delivery date.</p>
+      </div>
+      <div class="envwrap"><div class="env"><div class="letter"><span class="to">Write to</span><span id="mail">info@documents2theworld.com</span><button class="copy" id="copy" type="button">Copy address</button></div><div class="front" aria-hidden="true"></div></div></div>
+    </div>
+  </section>
+</main>
+<footer><div class="wrap"><span>© 2026 Documents2theWorld</span><span>Original documents, delivered worldwide</span></div></footer>
+
+<script>
+(function(){
+  var CITIES={"United Kingdom":["London",51.51,-0.13],"Portugal":["Lisbon",38.72,-9.14],"Spain":["Madrid",40.42,-3.70],"France":["Paris",48.86,2.35],"Germany":["Berlin",52.52,13.40],"Italy":["Rome",41.90,12.50],"Ireland":["Dublin",53.35,-6.26],"Netherlands":["Amsterdam",52.37,4.90],"Switzerland":["Zurich",47.37,8.54],"United States":["New York",40.71,-74.00],"Canada":["Toronto",43.65,-79.38],"Mexico":["Mexico City",19.43,-99.13],"Brazil":["São Paulo",-23.55,-46.63],"Argentina":["Buenos Aires",-34.60,-58.38],"Cape Verde":["Praia",14.93,-23.51],"Angola":["Luanda",-8.84,13.23],"Mozambique":["Maputo",-25.97,32.57],"South Africa":["Johannesburg",-26.20,28.05],"Nigeria":["Lagos",6.52,3.38],"United Arab Emirates":["Dubai",25.20,55.27],"India":["Delhi",28.61,77.21],"China":["Shanghai",31.23,121.47],"Japan":["Tokyo",35.68,139.69],"Philippines":["Manila",14.60,120.98],"Australia":["Sydney",-33.87,151.21]};
+  var names=Object.keys(CITIES).sort();
+  var CODE={"United Kingdom":"LON","Portugal":"LIS","Spain":"MAD","France":"PAR","Germany":"BER","Italy":"ROM","Ireland":"DUB","Netherlands":"AMS","Switzerland":"ZRH","United States":"NYC","Canada":"YTO","Mexico":"MEX","Brazil":"SAO","Argentina":"BUE","Cape Verde":"RAI","Angola":"LAD","Mozambique":"MPM","South Africa":"JNB","Nigeria":"LOS","United Arab Emirates":"DXB","India":"DEL","China":"SHA","Japan":"TYO","Philippines":"MNL","Australia":"SYD"};
+  var sf=document.getElementById('r-from'), st=document.getElementById('r-to'), sd=document.getElementById('r-doc');
+  names.forEach(function(n){sf.add(new Option(n,n));st.add(new Option(n,n));});
+  sf.value="United Kingdom"; st.value="Brazil";
+
+  /* land mask: 160x72 cells, lon -180..180, lat 80..-58 (Natural Earth 110m) -> 3D dots */
+  var MASK="AAAAAGO8f//+AAfAAAAANAAAAAAAAAAwBPj///8AAwAAAAAGAAAAAAAAAA+V+AP//gAAAABgAf/AB2AAAAAAeJ78Af/8AAAAAIAP//mDAAAB/8/v6zPA//gAAP4AE3/////+7gH/z+/rM8D/+AAA/gATf/////7uP/////////////4APACAAAAAAACP////////////+CHAAAAAAAAAAAD/////cOB8AQAPv//////////+A/////4PADgAAD8//////////3wB/H///AOQAAAAPwf////////5gAAgD//+A/AAAAQGH////////AMAAMAH//+D+AAABgx////////4BwAAAAP//+f+AAAJD/////////0GAAAABf//9/4AAAu//////////wQAAAAB////+gAABn//////////AAAAAAB///+jAAAD//////////0AAAAAAH////AAAAH//3z//////AAAAAAAf///0AAAAf34e//////5AAAAAAB///+AAAAPhPA5/////8MAAAAAAH///wAAAA8DZ/3/////wgAAAAAAf//+AAAADwBP/P////CCAAAAAAA///wAAAAGeA///////MYAAAAAAD///AAAAAf4Ev/////4nAAAAAAAD//4AAAAD/gA//////wgAAAAAAAL//AAAAAP/3///////AAAAAAAAAP8EAAAAB////v////8AAAAAAAABfgQAAAAP//+/f////wAAAAAAAAC+AAAAAB///7+P///+AAAAAAAAAB4AAAAAH///3/D///0AAAAAAAAAHiEAAAA/////8H+f0AAAAAAAAAAeIGAAAB///+/wPw+gAAAAAAAAAAfhAAAAH///5+A+D4AAAAAAAAAAAPgAAAAf///3gBwPwQAAAAAAAAAAeAAAAD////8AHAPggAAAAAAAAAAYAAAAH///+IAcAOBAAAAAAAAAAAj+AAAP////gAgAQIAAAAAAAAAAAf8AAA////8ADAIAwAAAAAAAAAAA/4AAB+///wAAAQBAAAAAAAAAAAD/4AAAA//+AAAFBgAAAAAAAAAAAf/wAAAD//wAAAccAAAAAAAAAAAD//AAAAP/+AAAAz2AAAAAAAAAAAP//AAAA//4AAABHQwAAAAAAAAAA///gAAB//AAAAGNN8QAAAAAAAAD///AAAH/4AAAAIGB5AAAAAAAAAH//+AAAP/wAAAAcADgAAAAAAAAAf//wAAA//AAAAAAQFAAAAAAAAAB///AAAD/8AAAAAAAAAAAAAAAAAD//4AAAP/wAAAAAA5AAAAAAAAAAP//gAAB//EAAAAAPGAAAAAAAAAA//+AAAH/8QAAAAA8YAAAAAAAAAAf/wAAAf/DAAAAAP/gAAAAAAAAAB//AAAA/4MAAAAD//AAAAAAAAAAH/4AAAD/xgAAAAf/+AAAAAAAAAAf+AAAAP/GAAAAD//8AAAAAAAAAD/wAAAAf4AAAAAP//wAAAAAAAAAP/AAAAB/AAAAAAf//AAAAAAAAAA/8AAAAD8AAAAAB//8AAAAAAAAAD/gAAAAPgAAAAAH5/wAAAAAAAAAP8AAAAAwAAAAAAeD+AAAAAAAAAA/gAAAAAAAAAAAAAD4AQAAAAAAAH8AAAAAAAAAAAAAAPAAgAAAAAAAfAAAAAAAAAAAAAAAAAGAAAAAAAB4AAAAAAAAAAAAAAAwAgAAAAAAAHgAAAAAAAAAAAAAAAAGAAAAAAAAcAAAAAAAAAAAAAAAAAwAAAAAAAB4AAAAAAAAAAAAAAAAAAAAAAAAAPAAAAAAAAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAAAAAAAAAAAABwAAAAAAAAAAAAAAAAAAAAAAAAADgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", MW=160, MH=72, LT=80, LB=-58, D=Math.PI/180;
+  var raw=atob(MASK), bits=[];
+  for(var i=0;i<raw.length;i++){var c=raw.charCodeAt(i);for(var k=7;k>=0;k--)bits.push((c>>k)&1);}
+  function vec(lat,lon){lat*=D;lon*=D;return [Math.cos(lat)*Math.sin(lon), Math.sin(lat), Math.cos(lat)*Math.cos(lon)];}
+  var land=[];
+  for(var j=0;j<MH;j++){var lat=LT-(j+.5)*(LT-LB)/MH, keep=Math.max(.18,Math.cos(lat*D));
+    for(var i2=0;i2<MW;i2++){ if(!bits[j*MW+i2])continue; if(((i2*7919+j*104729)%1000)/1000>keep)continue;
+      land.push(vec(lat,-180+(i2+.5)*360/MW)); }}
+  var stars=[]; for(var s=0;s<140;s++)stars.push([Math.random(),Math.random(),Math.random()*1.2+.2,Math.random()]);
+
+  var cv=document.getElementById('map'), g=cv.getContext('2d'), W=0,H=0,R=0,cx=0,cy=0,dpr=1;
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var css=getComputedStyle(document.documentElement); function col(n){return css.getPropertyValue(n).trim();}
+  function size(){dpr=Math.min(window.devicePixelRatio||1,2);var r=cv.getBoundingClientRect();W=r.width;H=r.height;
+    cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);g.setTransform(dpr,0,0,dpr,0,0);R=Math.min(W,H)*0.365;cx=W/2;cy=H/2;}
+
+  var rotLon=10, rotLat=20, tgtLon=10, tgtLat=20, drag=null, idleSpin=0;
+  function view(v){ // rotate world so (rotLat,rotLon) faces the viewer
+    var a=-rotLon*D, b=rotLat*D;
+    var x=v[0]*Math.cos(a)+v[2]*Math.sin(a), z=-v[0]*Math.sin(a)+v[2]*Math.cos(a), y=v[1];
+    var y2=y*Math.cos(b)-z*Math.sin(b), z2=y*Math.sin(b)+z*Math.cos(b);
+    return [x,y2,z2];
+  }
+  function scr(p){return [cx+p[0]*R, cy-p[1]*R];}
+  function slerp(a,b,t){var d=Math.acos(Math.max(-1,Math.min(1,a[0]*b[0]+a[1]*b[1]+a[2]*b[2])));
+    if(d<1e-6)return a.slice(); var s1=Math.sin((1-t)*d)/Math.sin(d), s2=Math.sin(t*d)/Math.sin(d);
+    return [a[0]*s1+b[0]*s2,a[1]*s1+b[1]*s2,a[2]*s1+b[2]*s2];}
+  function hav(a,b){var dl=(b[1]-a[1])*D,dn=(b[2]-a[2])*D,h=Math.sin(dl/2)*Math.sin(dl/2)+Math.cos(a[1]*D)*Math.cos(b[1]*D)*Math.sin(dn/2)*Math.sin(dn/2);return 2*6371*Math.asin(Math.sqrt(h));}
+
+  var VA,VB,arcLen=0,t0=0;
+  function setRoute(){
+    var a=CITIES[sf.value], b=CITIES[st.value];
+    VA=vec(a[1],a[2]); VB=vec(b[1],b[2]);
+    var m=slerp(VA,VB,.5), ml=Math.sqrt(m[0]*m[0]+m[1]*m[1]+m[2]*m[2])||1;
+    tgtLat=Math.asin(m[1]/ml)/D; tgtLon=Math.atan2(m[0],m[2])/D; tgtLat=Math.max(-40,Math.min(40,tgtLat-16));
+    arcLen=Math.acos(Math.max(-1,Math.min(1,VA[0]*VB[0]+VA[1]*VB[1]+VA[2]*VB[2])));
+    var km=Math.round(hav(a,b)*1.08/10)*10;
+    document.getElementById('c-from').textContent=CODE[sf.value]; document.getElementById('c-to').textContent=CODE[st.value];
+    var hsh=0,key=sf.value+st.value+sd.value; for(var q=0;q<key.length;q++)hsh=(hsh*31+key.charCodeAt(q))%90000; document.getElementById('l-no').textContent='D2W-'+(10000+hsh)+'-'+CODE[st.value];
+    document.getElementById('m-route').innerHTML='<strong>'+a[0]+'</strong> → <strong>'+b[0]+'</strong>';
+    document.getElementById('m-dist').textContent=(sf.value===st.value?'Within the same country':km.toLocaleString('en-GB')+' km door to door');
+    var subj='Price request: '+sd.value+' from '+sf.value+' to '+st.value;
+    var body='Hello,\n\nI would like a price to send a '+sd.value+'.\nFrom: '+sf.value+'\nTo: '+st.value+'\n\nThank you';
+    document.getElementById('getprice').href='mailto:info@documents2theworld.com?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
+    t0=performance.now()+(reduce?-9999:700); idleSpin=0;
+    if(reduce){rotLon=tgtLon;rotLat=tgtLat;}
+  }
+  function arcPoint(t){var p=slerp(VA,VB,t), h=1+Math.sin(Math.PI*t)*(0.10+arcLen*0.16);return [p[0]*h,p[1]*h,p[2]*h];}
+  function visible(p){return p[2]>0 || (p[0]*p[0]+p[1]*p[1])>1;}
+
+  function frame(now){
+    // ease rotation toward target (shortest way round)
+    if(!drag){var dl=((tgtLon-rotLon+540)%360)-180; rotLon+=dl*0.06; rotLat+=(tgtLat-rotLat)*0.06;
+      var t=(now-t0)/2600; if(t>1.6&&!reduce){idleSpin+=0.04; tgtLon+=0.04;}}
+    g.clearRect(0,0,W,H);
+    // stars
+    for(var s=0;s<stars.length;s++){var q=stars[s];g.globalAlpha=.25+.45*Math.abs(Math.sin(now/1600+q[3]*9));g.fillStyle='#E8EEFF';g.fillRect(q[0]*W,q[1]*H,q[2],q[2]);} g.globalAlpha=1;
+    // atmosphere
+    var at=g.createRadialGradient(cx,cy,R*.92,cx,cy,R*1.32);at.addColorStop(0,'rgba(127,162,255,.35)');at.addColorStop(1,'rgba(127,162,255,0)');
+    g.fillStyle=at;g.beginPath();g.arc(cx,cy,R*1.32,0,6.2832);g.fill();
+    // sphere body
+    var sp=g.createRadialGradient(cx-R*.35,cy-R*.4,R*.1,cx,cy,R);sp.addColorStop(0,'#24397A');sp.addColorStop(.7,'#13234F');sp.addColorStop(1,'#0B1636');
+    g.fillStyle=sp;g.beginPath();g.arc(cx,cy,R,0,6.2832);g.fill();
+    // graticule (latitude rings)
+    g.strokeStyle='rgba(160,184,255,.10)';g.lineWidth=1;
+    for(var la=-60;la<=60;la+=30){g.beginPath();var st0=true;for(var lo=-180;lo<=180;lo+=6){var p=view(vec(la,lo));if(p[2]<0){st0=true;continue;}var q2=scr(p);st0?g.moveTo(q2[0],q2[1]):g.lineTo(q2[0],q2[1]);st0=false;}g.stroke();}
+    // land dots, brighter toward the viewer
+    var r=Math.max(1,R/210);
+    for(var i=0;i<land.length;i++){var p=view(land[i]); if(p[2]<=0.02)continue; var q3=scr(p);
+      g.fillStyle='rgba(176,198,255,'+(0.18+0.62*p[2]).toFixed(2)+')'; g.fillRect(q3[0]-r,q3[1]-r,r*2,r*2);}
+    // city points
+    names.forEach(function(n){var p=view(vec(CITIES[n][1],CITIES[n][2]));if(p[2]<=0)return;var q4=scr(p);g.fillStyle='rgba(255,255,255,'+(0.3+0.5*p[2]).toFixed(2)+')';g.beginPath();g.arc(q4[0],q4[1],1.8,0,6.2832);g.fill();});
+    // route
+    var tt=reduce?1:Math.max(0,Math.min(1,(now-t0)/2600)), e=tt<.5?2*tt*tt:1-Math.pow(-2*tt+2,2)/2;
+    if(sf.value!==st.value){
+      g.lineWidth=1.4;g.setLineDash([3,6]);g.strokeStyle='rgba(232,238,255,.35)';
+      drawArc(0,1); g.setLineDash([]);
+      g.lineWidth=3;g.strokeStyle=col('--glow');g.shadowColor=col('--glow');g.shadowBlur=14; drawArc(0,e); g.shadowBlur=0;
+    }
+    pin(VA,col('--sky'),CITIES[sf.value][0],now,false);
+    pin(VB,col('--glow'),CITIES[st.value][0],now,tt>=1);
+    if(tt>0&&tt<1&&sf.value!==st.value){var a=arcPoint(e),b=arcPoint(Math.min(1,e+.01)),pa=view(a),pb=view(b);
+      if(visible(pa)){var sa=scr(pa),sb=scr(pb);envelope(sa[0],sa[1],Math.atan2(sb[1]-sa[1],sb[0]-sa[0]));}}
+    requestAnimationFrame(frame);
+  }
+  function drawArc(t1,t2){g.beginPath();var on=false;for(var s=0;s<=80;s++){var t=t1+(t2-t1)*s/80,p=view(arcPoint(t));if(!visible(p)){on=false;continue;}var q=scr(p);on?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]);on=true;}g.stroke();}
+  function pin(v,c,label,now,landed){var p=view(v);if(p[2]<=0)return;var q=scr(p);
+    var pulse=(now/1000)%1.6/1.6;
+    g.strokeStyle=c;g.globalAlpha=(1-pulse)*.8;g.lineWidth=2;g.beginPath();g.arc(q[0],q[1],5+pulse*18,0,6.2832);g.stroke();g.globalAlpha=1;
+    g.fillStyle=c;g.beginPath();g.arc(q[0],q[1],5,0,6.2832);g.fill();
+    g.font='700 12px "Courier Prime", monospace';g.textAlign='center';g.fillStyle='#fff';
+    g.fillText(landed?label.toUpperCase()+' · SIGNED FOR':label.toUpperCase(),q[0],q[1]-16);}
+  function envelope(x,y,ang){g.save();g.translate(x,y);g.rotate(ang);g.shadowColor='rgba(0,0,0,.4)';g.shadowBlur=8;
+    g.fillStyle='#fff';g.fillRect(-13,-8.5,26,17);g.shadowBlur=0;
+    for(var s=-13;s<13;s+=6){g.fillStyle=((s+13)/6)%2<1?col('--red'):col('--blue');g.fillRect(s,-8.5,3,2);g.fillRect(s+1.5,6.5,3,2);}
+    g.strokeStyle='#14204A';g.lineWidth=1.2;g.beginPath();g.moveTo(-13,-6.5);g.lineTo(0,2);g.lineTo(13,-6.5);g.stroke();g.restore();}
+
+  // drag to spin
+  cv.addEventListener('pointerdown',function(e){drag={x:e.clientX,y:e.clientY,lon:rotLon,lat:rotLat};cv.setPointerCapture(e.pointerId);});
+  cv.addEventListener('pointermove',function(e){if(!drag)return;rotLon=drag.lon-(e.clientX-drag.x)*0.35;rotLat=Math.max(-60,Math.min(60,drag.lat+(e.clientY-drag.y)*0.35));tgtLon=rotLon;tgtLat=rotLat;});
+  function end(){drag=null;} cv.addEventListener('pointerup',end); cv.addEventListener('pointercancel',end);
+
+  document.getElementById('routeform').addEventListener('submit',function(e){e.preventDefault();});
+  [sf,st,sd].forEach(function(s){s.addEventListener('change',setRoute);});
+  var rt;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(size,120);});
+  size(); setRoute(); rotLon=tgtLon-60; rotLat=tgtLat; requestAnimationFrame(frame);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(size);
+
+  var b=document.getElementById('copy');
+  b.addEventListener('click',function(){var t=document.getElementById('mail').textContent;
+    var done=function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy address'},1600)};
+    var sel=function(){var r=document.createRange();r.selectNodeContents(document.getElementById('mail'));var s=getSelection();s.removeAllRanges();s.addRange(r);};
+    try{navigator.clipboard.writeText(t).then(done,sel)}catch(err){sel()}});
+})();
+</script>
+
+
+</body>
+</html>
